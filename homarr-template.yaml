@@ -1,0 +1,79 @@
+# yaml-language-server: $schema=https://schema.zeabur.app/template.json
+apiVersion: zeabur.com/v1
+kind: Template
+metadata:
+    name: Homarr Dashboard
+spec:
+    description: A simple, yet powerful dashboard for your server
+    icon: https://homarr.dev/img/logo.png
+    coverImage: https://raw.githubusercontent.com/homarr-labs/homarr/refs/heads/dev/docs/img/screenshot.png
+    variables:
+        - key: HOMARR_DOMAIN
+          type: DOMAIN
+          name: Dashboard Domain
+          description: What domain do you want for your Homarr dashboard?
+        - key: SECRET_ENCRYPTION_KEY
+          type: STRING
+          name: Secret Encryption Key
+          description: A 64 character hex string for encrypting secrets. Generate with 'openssl rand -hex 32'
+        - key: TZ
+          type: STRING
+          name: Timezone
+          description: Your timezone (e.g., America/New_York, Asia/Tokyo)
+    tags:
+        - Dashboard
+        - Self-hosted
+        - Tools
+    readme: |
+        # Homarr Dashboard
+
+        A simple, yet powerful dashboard for your server. A sleek, modern dashboard that puts all of your apps and services at your fingertips.
+
+        ## Features
+
+        - Sleek, modern interface
+        - App and service management
+        - Customizable dashboard
+        - Mobile friendly
+        - Docker integration support
+
+        ## Quick Start
+
+        1. Deploy this template
+        2. Set your SECRET_ENCRYPTION_KEY (generate with `openssl rand -hex 32`)
+        3. Access your dashboard via the provided URL
+        4. Start adding your apps and services
+
+        ## Configuration
+
+        - All data is stored in `/appdata`
+        - Configure your apps and services through the web interface
+    services:
+        - name: Homarr
+          icon: https://homarr.dev/img/logo.png
+          template: PREBUILT
+          spec:
+            source:
+                image: ghcr.io/homarr-labs/homarr:latest
+            ports:
+                - id: web
+                  port: 7575
+                  type: HTTP
+            volumes:
+                - id: data
+                  dir: /appdata
+            instructions:
+                - title: Dashboard URL
+                  content: ${ZEABUR_WEB_URL}
+                - title: Data Directory
+                  content: /appdata
+                - title: Secret Encryption Key
+                  content: Please ensure SECRET_ENCRYPTION_KEY is set in environment variables
+            env:
+                SECRET_ENCRYPTION_KEY:
+                    default: ${SECRET_ENCRYPTION_KEY}
+                    expose: false
+                TZ:
+                    default: ${TZ}
+                    expose: false
+          domainKey: HOMARR_DOMAIN
