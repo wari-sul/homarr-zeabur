@@ -1,48 +1,87 @@
+
+---
+
 # Homarr Zeabur Template
 
-One-click deployment template for [Homarr](https://homarr.dev) - a sleek, modern dashboard for managing your self-hosted apps and services.
+A fully optimized **one-click deployment template** for **[Homarr](https://homarr.dev)** — the modern, elegant dashboard for organizing and managing your self-hosted apps and services.
 
 [![Deploy on Zeabur](https://zeabur.com/button.svg)](https://zeabur.com/templates/C2O8R8)
 
-## Features
+This repository contains the **latest maintained version** of the Homarr Zeabur template.
 
-- Modern, customizable dashboard interface
-- Mobile-friendly responsive design
-- Persistent data storage with Docker volumes
-- Automatic SSL and domain management via Zeabur
+---
 
-## Quick Deploy
+## 🚀 Features
 
-1. Click the [Deploy on Zeabur](https://zeabur.com/templates/C2O8R8) button
-2. Configure required variables:
-   - **Dashboard Domain**: Your custom domain or use Zeabur's default
-   - **Secret Encryption Key**: Generate with `openssl rand -hex 32`
-   - **Timezone**: (Optional) e.g., `America/New_York`, `Asia/Tokyo`
-3. Access your dashboard at the provided URL
+* 🖥️ **Clean, modern, customizable interface**
+* 📱 **Responsive and mobile-friendly UI**
+* 💾 **Persistent data storage** via Zeabur volumes (`/appdata`)
+* 🔐 **Secure secret storage** (required encryption key)
+* 🌐 **Automatic HTTPS + domain management** through Zeabur
+* 🧩 **Fully compatible with the official Homarr Docker image**
 
-## Configuration
+---
 
-All data persists in `/appdata` including:
-- Dashboard configuration
-- App settings and icons
-- User preferences
+## ⚡ Quick Deploy
+
+1. Click the **Deploy on Zeabur** button
+   👉 [https://zeabur.com/templates/C2O8R8](https://zeabur.com/templates/C2O8R8)
+2. Set the required environment variables:
+
+   * **Dashboard Domain** – your custom domain or Zeabur-provided subdomain
+   * **SECRET_ENCRYPTION_KEY** – generate with:
+
+     ```bash
+     openssl rand -hex 32
+     ```
+   * **TZ** *(optional)* – e.g. `America/New_York`, `Asia/Tokyo`
+3. Deploy and access your dashboard at the generated URL.
+
+---
+
+## 🔧 Configuration Details
+
+All persistent data is stored under:
+
+```
+/appdata
+```
+
+This includes:
+
+* Dashboard layout
+* App & widget configuration
+* Icons, metadata, and preferences
 
 ### Environment Variables
 
-- `SECRET_ENCRYPTION_KEY` - Required 64-character hex string for encryption
-- `TZ` - Optional timezone setting
+| Variable                | Required   | Description                                            |
+| ----------------------- | ---------- | ------------------------------------------------------ |
+| `SECRET_ENCRYPTION_KEY` | ✅ Yes      | 64-character hex string used to encrypt stored secrets |
+| `TZ`                    | ❌ Optional | Container timezone (e.g., `Europe/London`)             |
 
-## Manual Deployment
-`zeabur template deploy -f homarr-template.yaml`
+---
 
+## 📦 Manual Deployment
 
-## Links
+If you'd like to deploy the template directly from this repository:
 
-- [Published Template](https://zeabur.com/templates/C2O8R8)
-- [Homarr Documentation](https://homarr.dev/docs)
-- [Docker Image](https://github.com/homarr-labs/homarr/pkgs/container/homarr)
+```bash
+zeabur template deploy -f homarr-template.yaml
+```
 
-## License
+---
+
+## 🔗 Useful Links
+
+* **Published Template:** [https://zeabur.com/templates/C2O8R8](https://zeabur.com/templates/C2O8R8)
+* **Homarr Documentation:** [https://homarr.dev/docs](https://homarr.dev/docs)
+* **Docker Image:** [https://github.com/homarr-labs/homarr/pkgs/container/homarr](https://github.com/homarr-labs/homarr/pkgs/container/homarr)
+
+---
+
+## 📜 License
 
 MIT License
 
+---
