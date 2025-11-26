@@ -2,78 +2,92 @@
 apiVersion: zeabur.com/v1
 kind: Template
 metadata:
-    name: Homarr Dashboard
+  name: Homarr Dashboard
 spec:
-    description: A simple, yet powerful dashboard for your server
-    icon: https://homarr.dev/img/logo.png
-    coverImage: https://raw.githubusercontent.com/homarr-labs/homarr/refs/heads/dev/docs/img/screenshot.png
-    variables:
-        - key: HOMARR_DOMAIN
-          type: DOMAIN
-          name: Dashboard Domain
-          description: What domain do you want for your Homarr dashboard?
-        - key: SECRET_ENCRYPTION_KEY
-          type: STRING
-          name: Secret Encryption Key
-          description: A 64 character hex string for encrypting secrets. Generate with 'openssl rand -hex 32'
-        - key: TZ
-          type: STRING
-          name: Timezone
-          description: Your timezone (e.g., America/New_York, Asia/Tokyo)
-    tags:
-        - Dashboard
-        - Self-hosted
-        - Tools
-    readme: |
-        # Homarr Dashboard
+  description: A simple, yet powerful dashboard for your server
+  icon: https://homarr.dev/img/logo.png
+  coverImage: https://raw.githubusercontent.com/homarr-labs/homarr/refs/heads/dev/docs/img/screenshot.png
 
-        A simple, yet powerful dashboard for your server. A sleek, modern dashboard that puts all of your apps and services at your fingertips.
+  variables:
+    - key: PUBLIC_DOMAIN
+      type: DOMAIN
+      name: Domain
+      description: Domain to access your Homarr dashboard (e.g. homarr.example.com)
 
-        ## Features
+    - key: SECRET_ENCRYPTION_KEY
+      type: STRING
+      name: Secret Encryption Key
+      description: 64-character hex string used to encrypt secrets in Homarr’s database
 
-        - Sleek, modern interface
-        - App and service management
-        - Customizable dashboard
-        - Mobile friendly
-        - Docker integration support
+  tags:
+    - Tool
+    - Dashboard
 
-        ## Quick Start
+  readme: |
+    # Homarr
 
-        1. Deploy this template
-        2. Set your SECRET_ENCRYPTION_KEY (generate with `openssl rand -hex 32`)
-        3. Access your dashboard via the provided URL
-        4. Start adding your apps and services
+    Homarr is a modern, easy-to-use dashboard for your server. It puts all of your
+    apps and services in one place with a clean, widget-based UI.
 
-        ## Configuration
+    👉 For the latest version of this template, visit:  
+    **https://github.com/wari-sul/homarr-zeabur/**
 
-        - All data is stored in `/appdata`
-        - Configure your apps and services through the web interface
-    services:
-        - name: Homarr
-          icon: https://homarr.dev/img/logo.png
-          template: PREBUILT
-          spec:
-            source:
-                image: ghcr.io/homarr-labs/homarr:latest
-            ports:
-                - id: web
-                  port: 7575
-                  type: HTTP
-            volumes:
-                - id: data
-                  dir: /appdata
-            instructions:
-                - title: Dashboard URL
-                  content: ${ZEABUR_WEB_URL}
-                - title: Data Directory
-                  content: /appdata
-                - title: Secret Encryption Key
-                  content: Please ensure SECRET_ENCRYPTION_KEY is set in environment variables
-            env:
-                SECRET_ENCRYPTION_KEY:
-                    default: ${SECRET_ENCRYPTION_KEY}
-                    expose: false
-                TZ:
-                    default: ${TZ}
-                    expose: false
-          domainKey: HOMARR_DOMAIN
+    This template deploys the official Docker image:
+
+    - Image: `ghcr.io/homarr-labs/homarr:latest`
+    - Port: `7575` (HTTP, TLS is handled by Zeabur)
+    - Persistent config stored in `/appdata`
+
+    ## Required environment
+
+    Homarr **requires** a `SECRET_ENCRYPTION_KEY` – a 64-character hex string used
+    to encrypt secrets in its database. If this is missing, Homarr will exit with an error.
+
+    You can generate one with:
+
+    ```bash
+    openssl rand -hex 32
+    ```
+
+    Save this key somewhere safe; losing it means losing access to encrypted secrets.
+
+    ## Notes about Docker integration
+
+    The upstream Docker example mounts `/var/run/docker.sock` so Homarr can inspect local containers.
+    Zeabur does **not** expose Docker to containers, so this mount is intentionally omitted.
+
+    ## Access
+
+    After deployment, your dashboard will be available at:
+
+    - `https://<your-domain>/`
+
+  services:
+    - name: homarr
+      icon: https://homarr.dev/img/logo.png
+      template: PREBUILT
+
+      spec:
+        source:
+          image: ghcr.io/homarr-labs/homarr:latest
+
+        ports:
+          - id: web
+            port: 7575
+            type: HTTP
+
+        volumes:
+          - id: appdata
+            dir: /appdata
+
+        env:
+          SECRET_ENCRYPTION_KEY:
+            default: ${SECRET_ENCRYPTION_KEY}
+
+        instructions:
+          - title: Homarr Dashboard
+            content: https://${PUBLIC_DOMAIN}/
+          - title: Secret Encryption Key
+            content: ${SECRET_ENCRYPTION_KEY}
+
+      domainKey: PUBLIC_DOMAIN
